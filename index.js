@@ -1,6 +1,6 @@
-var SpiderWeb = require('spider-web'),
-	SpiderError = require('spider-error');
+var Spiderweb = require('./spiderweb'),
+	SpiderError = require('./spider-error');
 
-SpiderWeb.SpiderError = SpiderError;
+Spiderweb.SpiderError = SpiderError;
 
-module.exports = SpiderError;
+module.exports = Spiderweb;

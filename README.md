@@ -1,4 +1,4 @@
-SpiderWeb
+Spiderweb
 =========
 
 Crawl multiple domains using one or more entry URLs.
@@ -12,7 +12,7 @@ npm install spiderweb
 ````
 
 ````javascript
-var SpiderWeb = require('spiderweb'),
+var Spiderweb = require('spiderweb'),
 	urls, options, spiderweb;
 
 urls = ['bar.com', 'foo.bar.com'];
@@ -23,11 +23,11 @@ options = {
 	excludedUrls: ['*biz.foo.com*', '*/admin/*']
 };
 
-spiderweb = new SpiderWeb(urls, options);
+spiderweb = new Spiderweb(urls, options);
 
 spider.pageHandler = function(err, resp, body, entry) {
 	console.log(entry.url);
-	SpiderWeb.prototype.pageHandler.apply(this, arguments);
+	Spiderweb.prototype.pageHandler.apply(this, arguments);
 }
 
 spiderweb.start(function(err, log) {

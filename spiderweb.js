@@ -1,5 +1,6 @@
 var request = require('request'),
 	cheerio = require('cheerio'),
+	mime = require('mime'),
 	util = require('util'),
 	configExtend = require('config-extend'),
 	url = require('url'),
@@ -8,7 +9,7 @@ var request = require('request'),
 
 mime.default_type = 'text/html';
 
-function SpiderWeb(initialUrls, options) {
+function Spiderweb(initialUrls, options) {
 	var self = this,
 		i, vals, val;
 
@@ -75,7 +76,7 @@ function SpiderWeb(initialUrls, options) {
 	this._running = false;
 }
 
-SpiderWeb.prototype.start = function(cb) {
+Spiderweb.prototype.start = function(cb) {
 	var self = this,
 		i;
 
@@ -91,14 +92,14 @@ SpiderWeb.prototype.start = function(cb) {
 	}	
 };
 
-SpiderWeb.prototype.end = function() {
+Spiderweb.prototype.end = function() {
 	if (this._cb) {
 		this._cb(null, this._log);
 	}
 };
 
 
-SpiderWeb.prototype.queue = function(url, parentUrl, type) {
+Spiderweb.prototype.queue = function(url, parentUrl, type) {
 	var entry = {
 			url: url,
 			type: type
@@ -122,7 +123,7 @@ SpiderWeb.prototype.queue = function(url, parentUrl, type) {
 };
 
 
-SpiderWeb.prototype._run = function() {
+Spiderweb.prototype._run = function() {
 	var self = this,
 		entry, options;
 
@@ -221,7 +222,7 @@ SpiderWeb.prototype._run = function() {
 
 
 
-SpiderWeb.prototype.processUrl = function(currentUrl, urlVal) {
+Spiderweb.prototype.processUrl = function(currentUrl, urlVal) {
 	if (!this._httpUrlRegex.test(urlVal)) {		
 		if (urlVal.substr(0, 2) === '//') {
 			urlVal = this.getProtocol(currentUrl) + urlVal;
@@ -243,7 +244,7 @@ SpiderWeb.prototype.processUrl = function(currentUrl, urlVal) {
 };
 
 	
-SpiderWeb.prototype.isValidDomain = function(urlVal) {
+Spiderweb.prototype.isValidDomain = function(urlVal) {
 	var regex, i;
 	
 	for (i = 0; i < this._validDomainRegex.length; i++) {
@@ -256,7 +257,7 @@ SpiderWeb.prototype.isValidDomain = function(urlVal) {
 };
 
 
-SpiderWeb.prototype.isExcludedDomain = function(urlVal) {
+Spiderweb.prototype.isExcludedDomain = function(urlVal) {
 	var regex, i;
 	
 	for (i = 0; i < this._excludeUrlsRegex.length; i++) {
@@ -270,26 +271,26 @@ SpiderWeb.prototype.isExcludedDomain = function(urlVal) {
 
 
 
-SpiderWeb.prototype.getDomain = function(urlVal) {
+Spiderweb.prototype.getDomain = function(urlVal) {
 	return url.parse(urlVal).hostname;
 };
 
 
-SpiderWeb.prototype.getBaseUrl = function(urlVal) {
+Spiderweb.prototype.getBaseUrl = function(urlVal) {
 	urlVal = url.parse(urlVal);
 
 	return urlVal.protocol + '//' + urlVal.host;
 };
 
 
-SpiderWeb.prototype.getProtocol = function(urlVal) {
+Spiderweb.prototype.getProtocol = function(urlVal) {
 	urlVal = url.parse(urlVal);
 
 	return urlVal.protocol;
 };
 
 
-SpiderWeb.prototype.createRegex = function(val) {
+Spiderweb.prototype.createRegex = function(val) {
 	var parts = val.split('*'),
 		i;
 
@@ -304,11 +305,11 @@ SpiderWeb.prototype.createRegex = function(val) {
 };
 
 
-SpiderWeb.prototype.regexEscape = function(val) {
+Spiderweb.prototype.regexEscape = function(val) {
 	return val.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
 };
 
-SpiderWeb.prototype.isFile = function(urlVal) {
+Spiderweb.prototype.isFile = function(urlVal) {
 	var type;
 
 	urlVal = url.parse(urlVal);
@@ -330,7 +331,7 @@ SpiderWeb.prototype.isFile = function(urlVal) {
 }
 
 
-SpiderWeb.prototype.log = function(entry, err) {
+Spiderweb.prototype.log = function(entry, err) {
 	if (typeof err === 'object') {
 		err = SpiderError.fromError(entry, err);
 	}
@@ -342,7 +343,7 @@ SpiderWeb.prototype.log = function(entry, err) {
 };
 
 
-SpiderWeb.prototype.pageHandler = function(err, resp, body, entry) {
+Spiderweb.prototype.pageHandler = function(err, resp, body, entry) {
 	var self = this,
 		$;
 
@@ -433,4 +434,4 @@ SpiderWeb.prototype.pageHandler = function(err, resp, body, entry) {
 };
 
 
-module.exports = SpiderWeb;
+module.exports = Spiderweb;
