@@ -23,7 +23,7 @@ function SpiderWeb(initialUrls, options) {
 
 	this.options = configExtend({
 		validDomains: [],
-		excludedDomains: [],
+		excludeUrls: [],
 		excludeNoFollow: false,
 		images: false,
 		links: false,
@@ -59,12 +59,12 @@ function SpiderWeb(initialUrls, options) {
 	this._validDomainRegex = vals;
 
 	vals = []
-	for (i = 0; i < this.options.excludedDomains.length; i++) {
-		val = this.options.excludedDomains[i];
+	for (i = 0; i < this.options.excludeUrls.length; i++) {
+		val = this.options.excludeUrls[i];
 		val = this.createRegex(val);
 		vals.push(val);
 	}
-	this._excludedDomainsRegex = vals;
+	this._excludeUrlsRegex = vals;
 
 	this._httpUrlRegex = new RegExp('^https?://', 'i');
 
@@ -259,8 +259,8 @@ SpiderWeb.prototype.isValidDomain = function(urlVal) {
 SpiderWeb.prototype.isExcludedDomain = function(urlVal) {
 	var regex, i;
 	
-	for (i = 0; i < this._excludedDomainsRegex.length; i++) {
-		if(this._excludedDomainsRegex[i].test(urlVal)) {
+	for (i = 0; i < this._excludeUrlsRegex.length; i++) {
+		if(this._excludeUrlsRegex[i].test(urlVal)) {
 			return true;
 		}	
 	}

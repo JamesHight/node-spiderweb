@@ -1,10 +1,11 @@
 SpiderWeb
----------
+=========
 
 Crawl multiple domains using one or more entry URLs.
 
 
 Installation
+------------
 
 ````bash
 npm install spiderweb
