@@ -25,6 +25,7 @@ function Spiderweb(initialUrls, options) {
 	this.options = configExtend({
 		validDomains: [],
 		excludeUrls: [],
+		flagUrls: [],
 		excludeNoFollow: false,
 		images: false,
 		links: false,
@@ -223,8 +224,17 @@ Spiderweb.prototype._run = function() {
 
 
 Spiderweb.prototype.processUrl = function(currentUrl, urlVal) {
+
+	// remove hash tags from url
+	if (urlVal && urlVal.indexOf('#') > -1) {
+		urlVal = urlVal.split('#')[0];
+	}
+
 	if (!this._httpUrlRegex.test(urlVal)) {		
-		if (urlVal.substr(0, 2) === '//') {
+		if (!urlVal.length) {
+			urlVal = currentUrl;
+		}
+		else if (urlVal.substr(0, 2) === '//') {
 			urlVal = this.getProtocol(currentUrl) + urlVal;
 		}
 		else if (urlVal.substr(0, 1) === '/') {
@@ -235,9 +245,8 @@ Spiderweb.prototype.processUrl = function(currentUrl, urlVal) {
 		}
 	}
 
-	// remove hash tags from url
-	if (urlVal && urlVal.indexOf('#') > -1) {
-		urlVal = urlVal.split('#')[0];
+	if (urlVal.match(/\/\/$/)) {
+		process.exit();
 	}
 
 	return urlVal;
@@ -414,7 +423,7 @@ Spiderweb.prototype.pageHandler = function(err, resp, body, entry) {
 	this._run();
 
 	function queueUrl(url) {
-		if (url.match(/^mailto:/i)) {
+		if (url.match(/^mailto:/i) || url.match(/^javascript:/i)) {
 			return;
 		}
 
