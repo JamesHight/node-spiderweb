@@ -231,7 +231,7 @@ Spiderweb.prototype.processUrl = function(currentUrl, urlVal) {
 			urlVal = this.getBaseUrl(currentUrl) + urlVal;
 		}
 		else {
-			urlVal = this.getBaseUrl(currentUrl) + '/' + urlVal;
+			urlVal = currentUrl + '/' + urlVal;
 		}
 	}
 
