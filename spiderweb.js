@@ -81,6 +81,7 @@ Spiderweb.prototype.start = function(cb) {
 	var self = this,
 		i;
 
+	this._pause = false;
 	this._cb = cb;
 
 	if (Array.isArray(this.initialUrls)) {
@@ -94,6 +95,7 @@ Spiderweb.prototype.start = function(cb) {
 };
 
 Spiderweb.prototype.end = function() {
+	this._pause = true;
 	if (this._cb) {
 		this._cb(null, this._log);
 	}
@@ -127,6 +129,10 @@ Spiderweb.prototype.queue = function(url, parentUrl, type) {
 Spiderweb.prototype._run = function() {
 	var self = this,
 		entry, options;
+
+	if (this._pause) {
+		return;
+	}
 
 	if (!this._queue.length) {
 		this._running = false;
