@@ -430,7 +430,7 @@ Spiderweb.prototype.pageHandler = function(err, resp, body, entry) {
 			});
 		}
 	}
-
+ 
 	this._run();
 
 	function queueUrl(url) {
