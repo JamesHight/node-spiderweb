@@ -248,10 +248,10 @@ Spiderweb.prototype.processUrl = function(currentUrl, urlVal) {
 		}
 		else {
 			if (currentUrl.length && currentUrl[currentUrl.length -1] !== '/') {
-				urlVal = currentUrl + urlVal;
+				urlVal = currentUrl + '/' + urlVal;
 			}
 			else {
-				urlVal = currentUrl + '/' + urlVal;
+				urlVal = currentUrl + urlVal;
 			}
 		}
 	}
