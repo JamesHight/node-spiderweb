@@ -423,7 +423,7 @@ Spiderweb.prototype.pageHandler = function(err, resp, body, entry) {
 	this._run();
 
 	function queueUrl(url) {
-		if (url.match(/^mailto:/i) || url.match(/^javascript:/i)) {
+		if (url.match(/^mailto:/i) || url.match(/^javascript:/i) || url.match(/^tel:/i)) {
 			return;
 		}
 
