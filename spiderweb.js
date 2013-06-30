@@ -95,9 +95,11 @@ Spiderweb.prototype.start = function(cb) {
 };
 
 Spiderweb.prototype.end = function() {
-	this._pause = true;
-	if (this._cb) {
-		this._cb(null, this._log);
+	if (!this._pause) {	
+		this._pause = true;
+		if (this._cb) {
+			this._cb(null, this._log);
+		}
 	}
 };
 
