@@ -263,10 +263,6 @@ Spiderweb.prototype.processUrl = function(currentUrl, urlVal) {
 		}
 	}
 
-	if (urlVal.match(/\/\/$/)) {
-		process.exit();
-	}
-
 	return urlVal;
 };
 
