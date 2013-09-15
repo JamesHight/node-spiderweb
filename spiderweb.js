@@ -104,7 +104,7 @@ Spiderweb.prototype.end = function() {
 };
 
 
-Spiderweb.prototype.queue = function(url, parentUrl, type) {
+Spiderweb.prototype.queue = function(url, parentUrl, type, originalUrl) {
 	var entry = {
 			url: url,
 			type: type
@@ -112,6 +112,10 @@ Spiderweb.prototype.queue = function(url, parentUrl, type) {
 
 	if (parentUrl) {
 		entry.parentUrl = parentUrl;
+	}
+
+	if (originalUrl) {
+		entry.originalUrl = originalUrl;
 	}
 
 	// prevent duplicate requests
@@ -149,6 +153,7 @@ Spiderweb.prototype._run = function() {
 	options = {
 		uri: entry.url,
 		encoding: null,
+		followRedirect: false,
 		/*headers: {
 			'User-Agent': 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13'
 		}*/
@@ -173,7 +178,14 @@ Spiderweb.prototype._run = function() {
 				return handleError(err);
 			}
 
-			if (resp['headers'] && resp['headers']['content-type'] 
+			// Queue redirects instead of following them
+			if (resp.statusCode === 301 || resp.statusCode === 302) {
+				url = resp.headers.location;
+				type = self.isValidDomain(url) ? 'interal' : 'external';
+				self.queue(url, entry.parentUrl, type, entry.originalUrl || entry.url);
+				run();
+			}
+			else if (resp['headers'] && resp['headers']['content-type'] 
 				&& resp['headers']['content-type'].indexOf('text/html') > -1) {
 				fetchUrl();
 			}
@@ -195,10 +207,16 @@ Spiderweb.prototype._run = function() {
 		request(options, function(err, resp, body) {
 			if (err) {
 				return handleError(err);
+			}			
+
+			// Queue redirects instead of following them
+			if (resp.statusCode === 301 || resp.statusCode === 302) {
+				url = resp.headers.location;
+				type = self.isValidDomain(url) ? 'interal' : 'external';
+				self.queue(url, entry.parentUrl, type, entry.originalUrl || entry.url);
+				run();
 			}
-
-
-			if (resp.headers['content-encoding'] 
+			else if (resp.headers['content-encoding'] 
 				&& (resp.headers['content-encoding'].indexOf('gzip') !== -1
 					|| resp.headers['content-encoding'].indexOf('deflate') !== -1)) {
 				zlib.unzip(body, function(err, data) {
