@@ -441,6 +441,11 @@ Spiderweb.prototype.pageHandler = function(err, resp, body, entry) {
 			return;
 		}
 
+		// prevent infinite recursion from malformed urls
+		if (entry.url && entry.url.slice(-url.length) === url) {
+			return;
+		}
+
 		url = self.processUrl(entry.url, url);
 
 		if (self.isExcludedDomain(url)) {

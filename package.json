@@ -1,6 +1,6 @@
 {
   "name": "spiderweb",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "description": "Crawl multiple domains using one or more entry URLs.",
   "main": "index.js",
   "scripts": {
