@@ -172,6 +172,8 @@ Spiderweb.prototype._run = function() {
 	headUrl();
 
 	function headUrl() {
+		var url, type;
+
 		options.method = 'HEAD';
 		request(options, function(err, resp, body) {
 			if (err) {
@@ -195,6 +197,10 @@ Spiderweb.prototype._run = function() {
 
 			function handleError(err) {
 				self.log(entry, err);
+				run();
+			}
+
+			function run() {
 				process.nextTick(function() {
 					self._run();
 				});
@@ -203,6 +209,8 @@ Spiderweb.prototype._run = function() {
 	}
 
 	function fetchUrl() {
+		var url, type;
+
 		options.method = 'GET';
 		request(options, function(err, resp, body) {
 			if (err) {
@@ -235,13 +243,17 @@ Spiderweb.prototype._run = function() {
 
 			function handleError(err) {
 				self.log(entry, err);
-				process.nextTick(function() {
-					self._run();
-				});
+				run();
 			}
 
 			function dispatch() {
 				self.pageHandler(err, resp, body, entry);
+			}
+
+			function run() {
+				process.nextTick(function() {
+					self._run();
+				});
 			}
 		});
 	}
